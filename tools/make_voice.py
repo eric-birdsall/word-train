@@ -19,9 +19,15 @@ from kokoro_onnx import Kokoro, EspeakConfig
 
 # Must match the strings in index.html (PROMPTS, PRAISE and the say() calls).
 PROMPTS = ["Which word matches the picture?", "Find the word for this picture!", "Which word is it?"]
+WORD_PROMPTS = ["Which picture matches the word?", "Find the picture for this word!", "Which picture is it?"]
 PRAISE = ["Great reading!", "Toot toot! You got it!", "Yes! Full steam ahead!", "Super reading!", "Faster and faster!"]
-LINES = PROMPTS + PRAISE + [
+LINES = PROMPTS + WORD_PROMPTS + PRAISE + [
     "All aboard! " + PROMPTS[0],
+    "All aboard! " + WORD_PROMPTS[0],
+    "Now tap this picture!",
+    "Perfect! Want to try the next level?",
+    "Read the word, find the picture!",
+    "Look at the picture, find the word!",
     "Choo choo! Off we go!",
     "Now tap this word!",
     "Try another one!",
@@ -29,7 +35,7 @@ LINES = PROMPTS + PRAISE + [
     "Moo! Cows on the track! Blow the whistle!",
     "Toot the whistle!",
     "You did it, Conductor! Hooray!",
-    "Word Train! Pick a level. Green is easy. Yellow is medium. Red is hard.",
+    "Word Train! Pick a game, then pick a level. Green is easy. Red is the hardest.",
 ]
 
 
