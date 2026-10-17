@@ -23,7 +23,6 @@ PRAISE = ["Great reading!", "Toot toot! You got it!", "Yes! Full steam ahead!", 
 LINES = PROMPTS + PRAISE + [
     "All aboard! " + PROMPTS[0],
     "Choo choo! Off we go!",
-    "Uh oh! Here come the hungry bugs!",
     "Now tap this word!",
     "Moo! A cow is on the track! Blow the whistle!",
     "Moo! Cows on the track! Blow the whistle!",

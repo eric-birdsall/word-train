@@ -714,7 +714,6 @@ async function oneBug(btn, kind, delay) {
   el.remove();
 }
 function bugsEat(btns) {
-  say("Uh oh! Here come the hungry bugs!");
   const kinds = shuffle([0, 1, 2]);
   return Promise.all(btns.map((b, i) => oneBug(b, kinds[i], i * 200)));
 }
@@ -805,7 +804,7 @@ function showQuestion(word, choices, onPick) {
   });
 }
 
-// resolves true when the right word was tapped first time, false after the bugs helped
+// resolves true when the right word was tapped first time, false after a wrong tap
 function ask(id, word, choices) {
   return new Promise(resolve => {
     const btns = showQuestion(word, choices);
@@ -817,8 +816,12 @@ function ask(id, word, choices) {
         b.classList.remove("pickme"); b.classList.add("yay"); ding(); sparkle(b); resolve(!wrong);
       } else {
         wrong = true;
-        await bugsEat(btns.filter((_, j) => choices[j] !== word));
+        const gone = btns.filter((_, j) => choices[j] !== word);
+        pop();
+        gone.forEach(g => { g.style.transition = "transform .5s ease-in, opacity .5s ease-in"; g.style.transform = "scale(.2)"; g.style.opacity = "0"; });
+        await sleep(550);
         if (id !== roundId) return;
+        gone.forEach(g => { g.style.visibility = "hidden"; });
         btns[choices.indexOf(word)].classList.add("pickme");
         say("Now tap this word!");
         locked = false;
@@ -827,9 +830,10 @@ function ask(id, word, choices) {
   });
 }
 
-async function trip(id, i) {
+// After a first-try answer, cows wander onto the track and need the whistle.
+async function trip(id, i, cows) {
   const from = i * D, to = (i + 1) * D, T = 4.6 / (1 + 0.32 * S.spd);
-  if (Math.random() < 1 / 3) {
+  if (cows) {
     const cx = from + D * 0.62, n = Math.random() < 0.35 ? 2 : 1;
     for (let k = 0; k < n; k++) S.cows.push({ x: cx + k * 95, state: "wait", o: 1, walk: false, bubble: 0 });
     const stopAt = cx - 118;
@@ -874,13 +878,14 @@ async function playRound(level) {
       }
       say(word[0][0].toUpperCase() + word[0].slice(1) + "!");   // read the word back now that it's answered
       const landed = flyCargo(id, word[1]);
+      const munched = firstTry ? bugsEat([...document.querySelectorAll(".word:not(.yay)")]) : null;
       await guard(id, sleep(750));
       whistle(WHISTLE_VOL[S.vol]); steamBurst();
       await guard(id, sleep(750));
       say(firstTry ? PRAISE[i] : "Choo choo! Off we go!");
-      await guard(id, Promise.all([landed, sleep(250)]));
+      await guard(id, Promise.all([landed, munched, sleep(250)]));
       $("qarea").classList.add("off");
-      await guard(id, trip(id, i));
+      await guard(id, trip(id, i, firstTry));
       S.reached = i + 1;
     }
     celebrate(id);
