@@ -24,6 +24,7 @@ LINES = PROMPTS + PRAISE + [
     "All aboard! " + PROMPTS[0],
     "Choo choo! Off we go!",
     "Now tap this word!",
+    "Try another one!",
     "Moo! A cow is on the track! Blow the whistle!",
     "Moo! Cows on the track! Blow the whistle!",
     "Toot the whistle!",
